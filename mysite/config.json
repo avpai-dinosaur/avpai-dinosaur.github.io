@@ -1,0 +1,9 @@
+[
+    {
+        "url": "/",
+        "template": "index.html",
+        "context":{
+                "name": "Ashvin Pai"
+        }
+    }
+]

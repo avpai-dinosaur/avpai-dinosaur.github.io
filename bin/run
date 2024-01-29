@@ -1,4 +1,4 @@
-  GNU nano 4.8              insta485run                         #!/bin/bash
+#!/bin/bash
 #
 # insta485run
 #
@@ -8,7 +8,8 @@
 
 
 # Stop on errors, print commands
-# See https://vaneyckt.io/posts/safer_bash_scripts_with_set_eux>set -Eeuo pipefail
+# See https://vaneyckt.io/posts/safer_bash_scripts_with_set_eux>
+set -Eeuo pipefail
 set -x
 
 # Clean
