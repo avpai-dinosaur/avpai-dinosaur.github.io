@@ -1,0 +1,22 @@
+  GNU nano 4.8              insta485run                         #!/bin/bash
+#
+# insta485run
+#
+# Clean, build and start server
+#
+# Andrew DeOrio <awdeorio@umich.edu>
+
+
+# Stop on errors, print commands
+# See https://vaneyckt.io/posts/safer_bash_scripts_with_set_eux>set -Eeuo pipefail
+set -x
+
+# Clean
+rm -rf mysite/html
+
+# Build
+mysitegenerator mysite
+
+# Serve
+cd mysite/html
+python3 -m http.server 8000
