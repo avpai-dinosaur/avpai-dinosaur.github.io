@@ -3,12 +3,26 @@
         "url": "/",
         "template": "index.html",
         "context":{
-                "name": "Ashvin Pai"
+            "name": "Ashvin Pai"
         }
     },
     {
         "url": "/projects/",
         "template": "projects.html",
+        "context":{
+
+        }
+    },
+    {
+        "url": "/blog/",
+        "template": "blog.html",
+        "context":{
+
+        }
+    },
+    {
+        "url": "/resume/",
+        "template": "resume.html",
         "context":{
 
         }
