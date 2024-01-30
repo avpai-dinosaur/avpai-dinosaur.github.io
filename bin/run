@@ -14,9 +14,14 @@ set -x
 
 # Clean
 rm -rf mysite/html
+rm -rf docs
 
 # Build
 mysitegenerator mysite
+
+# Copy into docs folder for github pages
+mkdir docs
+cp -r mysite/html/* docs
 
 # Serve
 cd mysite/html
