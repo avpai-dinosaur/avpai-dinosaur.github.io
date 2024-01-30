@@ -5,5 +5,12 @@
         "context":{
                 "name": "Ashvin Pai"
         }
+    },
+    {
+        "url": "/projects/",
+        "template": "projects.html",
+        "context":{
+
+        }
     }
 ]

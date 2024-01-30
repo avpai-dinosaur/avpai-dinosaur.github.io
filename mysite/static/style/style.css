@@ -1,0 +1,37 @@
+body {
+    background-color: slategray;
+}
+
+.top-banner {
+    background-color: rgb(7, 133, 175);
+}
+
+.top-nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+nav.top-nav li {
+    float: left;
+}
+
+nav.top-nav li a {
+    display: block;
+    color: whitesmoke;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+nav.top-nav li a:hover {
+    background-color: #111;
+}
+
+.name {
+    text-align: center;
+    padding: 100px 0;
+}
+
