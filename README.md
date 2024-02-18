@@ -1,1 +1,1 @@
-# Statically generated personal website.
+# avpai-dinosaur.github.io
