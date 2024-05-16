@@ -1,0 +1,83 @@
+body {
+    background-color: slategray;
+    margin: 0 auto;
+    max-width: 50em;
+    line-height: 1.5;
+    padding: 4em 1em;
+    font-family: "Helvetica", "Arial", sans-serif;
+}
+
+/* Top Banner stuff */
+
+header.banner {
+    background-color: rgb(7, 133, 175);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+footer.banner {
+    background-color: rgb(7, 133, 175);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.banner-nav {
+    list-style-type: none;
+    margin: auto;
+    width: max-content;
+    padding: 0;
+    overflow: hidden;
+}
+
+.banner-nav li {
+    float: left;
+}
+
+.banner-nav li a {
+    display: block;
+    color: whitesmoke;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+.banner-nav li a:hover {
+    background-color: #111;
+}
+
+/* End top banner */
+
+/* Home page */
+
+.aboutMe {
+    font-size: 18pt;
+}
+
+/* End home page */
+
+
+/* Project page stuff */
+
+.project {
+    display: block;
+    width: 75%;
+    height: 75%;
+    margin: auto;
+    padding: 10px;
+}
+
+.project img {
+    margin: auto;
+    width: 75%;
+}
+
+/* End project page */
+
+center.resume {
+    padding: 50px 0;
+}
