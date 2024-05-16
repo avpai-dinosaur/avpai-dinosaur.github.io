@@ -7,6 +7,7 @@ body {
     font-family: "Helvetica", "Arial", sans-serif;
 }
 
+
 /* Top Banner stuff */
 
 header.banner {
@@ -71,9 +72,18 @@ footer.banner {
     padding: 10px;
 }
 
+.project h2 {
+    font-size: medium;
+}
+
+.project a {
+    color: #0000ee;
+    display: inline-block;
+}
+
 .project img {
     margin: auto;
-    width: 75%;
+    width: 100%;
 }
 
 /* End project page */
