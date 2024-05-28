@@ -21,6 +21,64 @@
     
         <article class="post">
             <h1>Bentley Library Data Visualization Fellowship:
+Researching Small Multiples</h1>
+            <h2>May 28, 2024</h2>
+            
+                <p>Met with Aman today to compile a list of improvements to the UI we would like to make and organize them by how difficult we thought they would be. It seems that the most difficult things are the new visualizations, like creating the small multiples maps, and the easiest things are visual changes, like changing the opacity of the markers on the map.</p>
+            
+                <p>We also dove more into the existing code base. There is not really much documentation for this project so we&#39;ve been on our own in figuring out how existing code works. I&#39;ve been learning Javascript on the side to keep up and was happy to see that I understood the high-level details of the code.</p>
+            
+                <p>The biggest breakthrough we had was in figuring out that the Crossfilter library was being used to filter locations based on year and aggregate records sharing a location but spread across years into a single point.</p>
+            
+                <p>I also spent some time researching how to accomplish making the small multiples maps. I had several false starts in looking at ArcGIS and Tableu tools but I think I found the most promising approach. It seems we should simply have a wrapper container which we can populate with svg images created with d3. The key realization was that our address data is seperate from Leaflet and thus we should operate on the address data directly when creating the small multiple maps, not the Leaflet generated map.</p>
+            
+            
+        </article>
+    
+        <article class="post">
+            <h1>Bentley Library Data Visualization Fellowship:
+Planning Sketches and Finished Geocoding</h1>
+            <h2>May 23, 2024</h2>
+            
+                <p>Today we finally finished geocoding! My eyes hurt from looking at ArcGIS UI for hours at a time. We had about 600 new addresses to geocode. ArcGIS was able to get about 95% of them no problem. The last 5% of addresses proved to be a real pain in the ass though. They were mostly historical addresses whose street names or house numbers didn&#39;t exist anymore.</p>
+            
+                <p>The process of finding the historical addresses was a bit of a scavenger hunt. Aman and I combed through 20th century fire insurance maps to find the addresses and identify where they present day counter part would be. After we found the present day location we hand inputted the longitude and latitude into ArcGIS. It was a slow process but finding a new address always raised our spirits.</p>
+            
+                <p>Now that the Geocoding is over we get to move onto the fun part, designing the map UI! I drew out an idea for what the UI should look like and got lots of great feedback from the other data viz fellows. Am excited to try and figure out if procedurally generating some small multiples maps is possible with Leaflet or d3.</p>
+            
+            
+                <img src=/images/bentleyBlog/mapSketch.png alt="post image"/>
+            
+        </article>
+    
+        <article class="post">
+            <h1>Bentley Library Data Visualization Fellowship:
+Disability and Data Visualization</h1>
+            <h2>May 22, 2024</h2>
+            
+                <p>All of today was devoted to learning about how to make data visualizations more accesible. As a cohort we discussed Aimi Hamraie&#39;s article, Mapping Access. Again, it was a somewhat difficult article to comprehend for me as it seemed geared towards people already familiar with the terms and theory of disability justice. The main takeaway from the discussion for me was to incorporate accesibility into projects from the very beginning. I don&#39;t think its possible for any project to be perfectly accessible but it seems much easier to make things accessible while you&#39;re designing them than after the fact (when they are in production).</p>
+            
+                <p>We also attended a talk by Phil Deaton and Dan Fitzpatrick on some more concrete tips of how to make visualizations accesible. An interesting thing from this talk was the point that disabled people may mistrust scientific/medical data due to the history of eugenics.</p>
+            
+                <p>While going through this talk I was reflecting on the fact that many of my peers in the CS program do not have a good knowledge of different HTML tags and usually opt for &lt;div&gt;s whenever they need another node on the DOM. I mostly learned HTML through the Mozilla web docs where they placed an emphasis on avoiding using &lt;div&gt; tags since they do not provide much information to screen readers. Moving forward I will be trying to convince more of my peers to use things besides &lt;div&gt; when they can.</p>
+            
+            
+        </article>
+    
+        <article class="post">
+            <h1>Bentley Library Data Visualization Fellowship:
+Learning to Geocode with ArcGIS</h1>
+            <h2>May 20, 2024</h2>
+            
+                <p>The first part of the day was spent learning how to geocode with ArcGIS. Aman and I spent a couple hours at the Clark Map Library which provides desktop computers with the ArcGIS software installed. There wasn&#39;t anything that interesting about the learning process, just following online tutorials, swapping in our data, watching everything break, and then having Caroline show us the actual proper way to do things.</p>
+            
+                <p>Post ArcGIS Justin gave a talk about how to design visualizations. He showed several mapping examples and an old one showing Napoleon&#39;s failed march to Russia really stuck with me. The map itself was pretty simple, just a line showing where the army had walked. The ingeious part, I thought, was that the mapper used the thickness of the line to portray how many men were still alive. At the start of the march the line was significantly larger than at the end of the march, effectively showcasing the sheer extent of how many people had died.</p>
+            
+            
+        </article>
+    
+        <article class="post">
+            <h1>Bentley Library Data Visualization Fellowship:
 Version Control &amp; Geocoding</h1>
             <h2>May 16, 2024</h2>
             
