@@ -21,6 +21,112 @@
     
         <article class="post">
             <h1>Bentley Library Data Visualization Fellowship:
+Drawing Some Orienting Features</h1>
+            <h2>June 6, 2024</h2>
+            
+                <p>Today I got the orienting features working, drawing the Huron River, some major streets, and some markers for Central Campus, the Michigan Stadium, the hospital, and North Campus. I created the GeoJSON file for the features by hand using geojson.io. Then, similar to drawing the background map, I used d3&#39;s path generator to convert the data to something the svg would understand.</p>
+            
+                <p>Another edit I made was to move away from displaying resident count through the radius of the address markers. Instead I decided to display resident count through color coding the markers. I think this way it makes the map cleaner since we don&#39;t have so many circles overlapping each other. The suggestion to do this came from another cohort member and I think it the map looks much better now.</p>
+            
+                <p>To ensure that the map remained accesible we are using a color-blind friendly pallete provided to us from the U-M branding website. The lighter blue means less residents and the darker blue means more residents. The red circles are orienting markers showing Central Campus, Michigan Stadium, the hospital, and North Campus.</p>
+            
+            
+                <img src=/images/bentleyBlog/smallMultiplesColorCoding.png alt="post image"/>
+            
+        </article>
+    
+        <article class="post">
+            <h1>Bentley Library Data Visualization Fellowship:
+Non-Deterministic Map Rendering</h1>
+            <h2>June 5, 2024</h2>
+            
+                <p>In my OS class we are currently debugging multi-threaded programs and identifying things like where race conditions happen. So having things not follow ordering contraints was fresh in my mind, especially because for map rendering the images must be drawn in a strict order.</p>
+            
+                <p>I had an inkling an ordering bug would probably happen since loading the GeoJSON is an asynchronous function. Today I got confirmation that this indeed an issue when I demonstrated the small multiples generator to Justin and saw that, randomly, the markers would not show up (a.k.a the background map was drawn after the markers were drawn).</p>
+            
+                <p>I know how to fix this issue in C++ (using a condition variable) but I am not familiar enough with Javascript yet to know how to impose an ordering constraing off the top of my head. I tried using the async/await pattern to no avail. I think I will need to dive into understanding promises before I know how to fix this issue. For the time being I decided to leave it be and come back later (hopefully not famous last words).</p>
+            
+                <p>Beyond this we got some feedback from the cohort that having some orienting landmarks on the background map would make things easier to decipher. For example having the Huron River and major streets like State St, Washtenaw, Plymouth, etc. I think implementing this will be similar to how we drew the background map, just in another layer. Another thing to think about will be how to make an effective legend to explain what these features are.</p>
+            
+            
+        </article>
+    
+        <article class="post">
+            <h1>Bentley Library Data Visualization Fellowship:
+Aggregating Addresses</h1>
+            <h2>June 4, 2024</h2>
+            
+                <p>Spent a few hours today aggregating the addresses within a time period. Initially I thought to brute force this but then my leetcoding kicked in and I realized I could combine addresses in O(n) time with a hash map.</p>
+            
+                <p>After I finished that I also added in a simple form so that the user can control the start and end dates as well as the timestep for each map. The following was the result at the end of the day. You can see that due to inconsistencies in the address data itself, some points were not successfuly combined.</p>
+            
+            
+                <img src=/images/bentleyBlog/smallMultiplesAggregateByAddressName.png alt="post image"/>
+            
+        </article>
+    
+        <article class="post">
+            <h1>Bentley Library Data Visualization Fellowship:
+Small Multiples First Try</h1>
+            <h2>June 3, 2024</h2>
+            
+                <p>Today I managed to get the first version of the small multiples working. I hardcoded a set of date values and one map generates based on each time interval. In the future the user will be allowed to control this. I also set the radius of each marker to scale logarithmically to the number of people who lived there at the time.</p>
+            
+                <p>However the markers are not currently aggregated within one time period. What does this mean? Say for example in 1950 ten people lived in 100 12th St. And then in 1951 five people lived in 100 12th St. Then currently the small multiple map showing the time period from 1950-59 has two markers 100 12th St., one with radius corresponding to ten people and one with radius corresponding to five people. In the future we want to aggregate this to show one marker with a radius corresponding to fifteen people.</p>
+            
+                <p>In addition to getting the map done the cohort discussed a reading about Elizabeth Peabody. Peabody created an interesting historical map which was a set of color coded squares arranged in a grid. Each square represented a decade and the color showed what type of historical event happened in that decade. Next to the map would be a list of major historical events so that the user could match the list of events to the visual of the map.</p>
+            
+                <p>This was an interesting map to discuss since it requires a lot of work on the part of the user to understand the underlying data being shown. Aman and I thought we might take inspiration from Peabody for the small multiples map, that is having a list of major housing events affecting African Americans and then allowing the user the opportunity to match the event to what they see on the maps.</p>
+            
+            
+                <img src=/images/bentleyBlog/smallMultiplesFirstTry.png alt="post image"/>
+            
+        </article>
+    
+        <article class="post">
+            <h1>Bentley Library Data Visualization Fellowship:
+The Map Appears!</h1>
+            <h2>May 31, 2024</h2>
+            
+                <p>Resuming where I left off yesterday I continued searching the d3 docs. Within ten minutes I found a simple and easy projection.fitSize() method which took in the dimensions of the SVG, the GeoJSON, and scaled everything for me. This worked like a charm and the background map appeared on the screen. I have no idea why my manual scaling wasn&#39;t working but I am just happy to get it working at the end of the day.</p>
+            
+                <p>After that, I spent some time studying how to use d3 data joins. This was in preperation for drawing circle markers where each address should be. Because I am most used to procedural programming my instinct was to use a for loop to append a bunch of &lt;circle&gt; elements to the SVG. However, d3 data joins allow a declarative way to do the same thing. Rather than give a procedure for how to draw address markers, I could just associate the address data with the &lt;circle&gt; elements from the DOM and just specify the end result I wanted (in this case the position of the circle, its radius, and styling). This ended up being much cleaner code and the following map was the result.</p>
+            
+            
+                <img src=/images/bentleyBlog/d3AnnArborOutlineMap.png alt="post image"/>
+            
+        </article>
+    
+        <article class="post">
+            <h1>Bentley Library Data Visualization Fellowship:
+Projection Mayehem</h1>
+            <h2>May 30, 2024</h2>
+            
+                <p>I have a GeoJSON of Ann Arbor&#39;s city borders taken from the government website. However, when I tried displaying it nothing showed up! The entire day was spent trying to debug this issue. This is where knowing how the SVG element worked came in really handy. I was able to inspect the DOM and see the d attribute in the &lt;path&gt; element which should have been drawing the city borders. Looking at the d attribute I saw that the pixel coordinates were completely off the screen. It turned out it was an issue with scaling the projection function. I tried to scale the projection function using different d3 provided methods but nothing ended up working.</p>
+            
+            
+        </article>
+    
+        <article class="post">
+            <h1>Bentley Library Data Visualization Fellowship:
+Scalable Vector Graphics</h1>
+            <h2>May 29 2024</h2>
+            
+                <p>I continued investigating creating small multiple maps with d3. As I looked through examples and d3 documentation I realized that I needed to understand more about the &lt;svg&gt; element that the map would actually be drawn onto.</p>
+            
+                <p>I read the mdn web docs to get in introduction to SVG from scratch. Its actually a very cool way to display images on the browser. While the downside is that loading SVG&#39;s can be slow I think that the benefits of having a DOM interface and maintainig quality when the user zooms in makes them the best option for the small multiples visualization.</p>
+            
+                <p>The SVG interface allows for the user to draw lines and basic shapes at some pixel coordinates on the screen. With just these simple shapes we can make an arbitrarily complex image, like a map!</p>
+            
+                <p>d3 gives some helper functions which make working with the SVG interface nicer. For example the geographic path generator. This takes GeoJSON geometry and converts it into a data string which the SVG can understand.</p>
+            
+                <p>Reading through everything the approach seems to be as follows: use d3&#39;s path generator and projection functions to draw the background map of Ann Arbor. Then, dynamically generate circles at each address using the SVG interface, making sure to use the projection function to convert longitude latitude to pixel coordinates.</p>
+            
+            
+        </article>
+    
+        <article class="post">
+            <h1>Bentley Library Data Visualization Fellowship:
 Researching Small Multiples</h1>
             <h2>May 28, 2024</h2>
             
