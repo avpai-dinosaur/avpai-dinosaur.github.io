@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Ashvin Pai</title>
     <link rel="stylesheet" href="/style/style.css" />
-    <script src="https://js.cx/libs/animate.js"></script>
+     
   </head>
   <body>
     <header class="banner">
@@ -15,6 +15,7 @@
         <li><a href="/projects/"> Projects </a></li>
         <li><a href="/blog/"> Blog </a></li>
         <li><a href="/resume/"> Resume </a></li>
+        <li><a href="/maps/"> Maps </a></li>
       </nav>
     </header>
      
@@ -24,7 +25,7 @@
 Adding A Legend</h1>
             <h2>June 12, 2024</h2>
             
-                <p>For the past two days I worked on created a legend for the map. In addition to the static legend displayed on the left hand side of the visualization, when the user mouses over a landmark a text box pops up with the name of that landmark. I decided to go with this method for naming the landmakrs to avoid cluttering the screen with lots of text.</p>
+                <p>For the past two days I worked on created a legend for the map. In addition to the static legend displayed on the left hand side of the visualization, when the user mouses over a landmark a text box pops up with the name of that landmark. I decided to go with this method for naming the landmarks to avoid cluttering the screen with lots of text. In addition non-road landmarks have been given a star shape to differentiate them from address markers. I also changed up the color scheme for the markers since previously their blue color was blending with the blue of the river.</p>
             
             
                 <img src=/images/bentleyBlog/smallMultiplesLegend.png alt="post image"/>
@@ -123,7 +124,7 @@ The Map Appears!</h1>
     
         <article class="post">
             <h1>Bentley Library Data Visualization Fellowship:
-Projection Mayehem</h1>
+Projection Mayhem</h1>
             <h2>May 30, 2024</h2>
             
                 <p>I have a GeoJSON of Ann Arbor&#39;s city borders taken from the government website. However, when I tried displaying it nothing showed up! The entire day was spent trying to debug this issue. This is where knowing how the SVG element worked came in really handy. I was able to inspect the DOM and see the d attribute in the &lt;path&gt; element which should have been drawing the city borders. Looking at the d attribute I saw that the pixel coordinates were completely off the screen. It turned out it was an issue with scaling the projection function. I tried to scale the projection function using different d3 provided methods but nothing ended up working.</p>

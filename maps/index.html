@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ashvin Pai</title>
+    <link rel="stylesheet" href="/style/style.css" />
+    
+<!-- dc dependencies -->
+<link
+rel="stylesheet"
+type="text/css"
+href="https://unpkg.com/dc@3/dc.css"
+/>
+<script src="https://unpkg.com/d3@5/dist/d3.js"></script>
+<script src="https://unpkg.com/crossfilter2@1.4/crossfilter.js"></script>
+<script src="https://unpkg.com/dc@3/dc.js"></script>
+
+<!-- leaflet dependencies -->
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+crossorigin=""
+/>
+<script
+src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+crossorigin=""
+></script>
+
+  </head>
+  <body>
+    <header class="banner">
+      <nav class="banner-nav">
+        <li><a href="/"> Home </a></li>
+        <li><a href="/projects/"> Projects </a></li>
+        <li><a href="/blog/"> Blog </a></li>
+        <li><a href="/resume/"> Resume </a></li>
+        <li><a href="/maps/"> Maps </a></li>
+      </nav>
+    </header>
+    
+<main>
+    <h3>Meteor Shower Map</h3>
+    <div id="year_range">
+      <p>
+        <b class="yearStart">yearStart</b> to
+        <b class="yearEnd">yearEnd</b> selected
+        <a
+          class="reset"
+          href="javascript:dc.filterAll('#aa_trange');dc.redrawAll('#aa_trange');"
+          style="visibility: hidden"
+          >reset</a
+        >
+      </p>
+    </div>
+    <div id="map"></div>
+  </main>
+  <script src="/scripts/maps.js"></script>
+
+    <footer class="banner">
+      <nav class="banner-nav">
+        <li><a href="mailto:avpai@umich.edu">E-mail</a></li>
+        <li>
+          <a href="https://github.com/avpai-dinosaur">Github</a>
+        </li>
+      </nav>
+    </footer>
+  </body>
+</html>
