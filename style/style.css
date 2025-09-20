@@ -1,0 +1,137 @@
+body {
+    background-color: slategray;
+    margin: 0 auto;
+    max-width: 50em;
+    line-height: 1.5;
+    padding: 4em 1em;
+    font-family: "Helvetica", "Arial", sans-serif;
+}
+
+
+/* Top Banner stuff */
+
+header.banner {
+    background-color: rgb(7, 133, 175);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+footer.banner {
+    background-color: rgb(7, 133, 175);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.banner-nav {
+    list-style-type: none;
+    margin: auto;
+    width: max-content;
+    padding: 0;
+    overflow: hidden;
+}
+
+.banner-nav li {
+    float: left;
+}
+
+.banner-nav li a {
+    display: block;
+    color: whitesmoke;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+.banner-nav li a:hover {
+    background-color: #111;
+}
+
+/* End top banner */
+
+/* Home page */
+
+.aboutMe {
+    font-size: 18pt;
+}
+
+/* End home page */
+
+
+/* Project page stuff */
+
+.project {
+    display: block;
+    width: 75%;
+    height: 75%;
+    margin: auto;
+    padding: 10px;
+}
+
+.project h2 {
+    font-size: medium;
+}
+
+.project a {
+    color: #0000ee;
+    display: inline-block;
+}
+
+.project img {
+    margin: auto;
+    max-width: 100%;
+}
+
+/* End project page */
+
+.post img {
+    margin: auto;
+    max-width: 100%;
+}
+
+center.resume {
+    padding: 50px 0;
+}
+
+/* Map stuff */
+
+#map {
+    height: 45vh;
+    width: 50vw;
+    margin-left: auto;
+    margin-right: auto;
+}
+#year_range {
+  width: 50vw;
+  margin-left: auto;
+  margin-right: auto;
+}
+.info {
+  padding: 6px 8px;
+  font: 14px/16px Arial, Helvetica, sans-serif;
+  background: white;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+.info h4 {
+  margin: 0 0 5px;
+  color: #777;
+}
+.legend {
+  line-height: 18px;
+  color: #555;
+}
+.legend i {
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin-right: 8px;
+  opacity: 0.7;
+}
+
+  /* End Map stuff */

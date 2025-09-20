@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ashvin Pai</title>
+    <meta name="keywords" content="Ashvin Pai, Software Engineer, Data Visualization, Interactive Maps, University of Michigan">
+    <link rel="stylesheet" href="/style/style.css" />
+     
+  </head>
+  <body>
+    <header class="banner">
+      <nav class="banner-nav">
+        <li><a href="/"> Home </a></li>
+        <li><a href="/projects/"> Projects </a></li>
+        <li><a href="/blog/"> Blog </a></li>
+      </nav>
+    </header>
+    
+    
+        <article class="project">
+            <h1><a href="https://github.com/avpai-dinosaur/p5-search-engine">Search Engine</a></h1>
+            <h2>April 2024</h2>
+            <p>A search engine for wikipedia pages. I worked on this project with two classmates in my Web Systems course. The set of wikipedia pages was given to us by the instructors. We first cleaned up the documents and then calculated an inverted index using the Madoop map-reduce framework. Next we made the index server, a REST API app to return search results ordered by their PageRank. Finally we created the search sever, a user facing app which queried the index server and returned results in HTML format.</p>
+            <img src=/images/searchEngine.png alt="Project image"/>
+        </article>
+    
+        <article class="project">
+            <h1><a href="https://github.com/avpai-dinosaur/p3-eval">Scheme Interpreter</a></h1>
+            <h2>March 2024</h2>
+            <p>A lexer, parser, and metacircular evaluator for Scheme...written in Scheme! I worked with a partner to implement the R5RS language specification. This was a great project where I did a lot of recursion, practiced writing programs in the functional paradigm, and also practiced reading language specifications. We also extended the Scheme language with a special mu form pictured below. It creates anonymous procedures which use dynamic scope.</p>
+            <img src=/images/schemeEvaluator.png alt="Project image"/>
+        </article>
+    
+        <article class="project">
+            <h1><a href="https://github.com/avpai-dinosaur/p3-madhavss-avpai">Reliable Transport</a></h1>
+            <h2>March 2024</h2>
+            <p>A project for my computer networks class where I worked with a partner to implement a reliable transport protocol on top of UDP. Using a sliding window mechanism, we provided inorder, reliable delivery of UDP datagrams in the presence of events like packet loss, delay, corruption, duplication, and reordering.</p>
+            <img src=/images/reliableTransport.png alt="Project image"/>
+        </article>
+    
+        <article class="project">
+            <h1><a href="https://github.com/avpai-dinosaur/bluebus">Bus Attack</a></h1>
+            <h2>February 2024</h2>
+            <p>A Blue Bus themed tower defense game. I wrote this game in 7 days over spring break as a crash course in game development and Pygame. Beyond that I found the project was valuable in practicing event driven programming. It is nowhere near polished since it was created in such a short time frame so I may return to it in the future to add some finishing touches or convert it into a more general tower defense game engine.</p>
+            <img src=/images/bluebus.png alt="Project image"/>
+        </article>
+    
+        <article class="project">
+            <h1><a href="https://github.com/avpai-dinosaur/p3-pipeline">Pipelined Processor</a></h1>
+            <h2>November 2023</h2>
+            <p>A cycle-accurate behavioral simulator for a pipelined implementation of the LC-2K ISA, complete with data forwarding and simple branch prediction. This project really helped me understand the basics of how a CPU works.</p>
+            <img src=/images/pipeline.png alt="Project image"/>
+        </article>
+    
+        <article class="project">
+            <h1><a href="https://github.com/avpai-dinosaur/gender_classification/blob/main/REU_Paper.pdf">Visualizing Bias in Gender Recognition</a></h1>
+            <h2>June 2023</h2>
+            <p>A Convolutional Neural Network (CNN) is a type of deep learning algorithm which is often used for image classification tasks. One such task is the classification of a person’s gender based upon an image. These gender classification models often pose a bias towards transgender and dark skinned individuals. Such biases are compounded by the fact that large neural networks function as black boxes and lack interpretability; it is difficult to explain why a model classifies an image in a particular way. I investigated Gradient-weighted Class Activation Mapping (Grad-CAM) as a visualization tool which can explain how gender classification models make their decisions.</p>
+            <img src=/images/genderClassification.png alt="Project image"/>
+        </article>
+    
+
+    <footer class="banner">
+      <nav class="banner-nav">
+        <li>
+          <a href="https://github.com/avpai-dinosaur">Github</a>
+        </li>
+        <li>
+          <a href="https://linkedin.com/in/ashvin-pai-188b7225b">LinkedIn</a>
+        </li>
+      </nav>
+    </footer>
+  </body>
+</html>
