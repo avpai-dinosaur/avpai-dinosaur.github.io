@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ashvin Pai</title>
+    <meta name="keywords" content="Ashvin Pai, Software Engineer, Data Visualization, Interactive Maps, University of Michigan">
+    <link rel="stylesheet" href="/style/style.css" />
+     
+  </head>
+  <body>
+    <header class="banner">
+      <nav class="banner-nav">
+        <li><a href="/"> Home </a></li>
+        <li><a href="/projects/"> Projects </a></li>
+        <li><a href="/blog/"> Blog </a></li>
+      </nav>
+    </header>
+    
+<article class ="post">
+    <h1>Setting up Nullboard with nbagent on WSL</h1>
+    <h2>November 9, 2025</h2>
+
+    <p>At work, I've enjoyed using the Azure Devops sprints feature to organize development tasks for various projects. Something about the visual nature of dragging tasks through "Todo", "In Progress", and "Completed" columns is extremely satisfying.</p>
+
+<p>I recently started wondering if I would also enjoy a kanban-style system for personal task and project management.</p>
+
+<p>My requirements for the software were as follows:</p>
+
+<ul>
+    <li>A Boards -> Lists -> Tasks organization hierarchy.</li>
+    <li>The ability to create and name an arbitrary amount of lists or columns on a board.</li>
+    <li>A GUI that allows dragging and dropping tasks between said lists/columns.</li>
+    <li>Saves data locally and can run without internet connection.</li>
+</ul>
+
+<p>I did not want any extra features beyond this, specifically anything that enabled sharing boards or tasks with other users. Just the bare minimum of dragging and dropping pixelated boxes around my computer screen such that I could feel a dopamine high from something other than binge-watching Youtube videos.<p>
+
+<p>After some searching I settled on using <a href="https://github.com/apankrat/nullboard">Nullboard</a>. It seemed to fulfill my minimalist requirements; the codebase consists of a single, albeit long, HTML file and jQuery 3.6.0.</p>
+
+<p>There was only one potential downside. Nullboard, by itself, stores all its data in <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage">localStorage</a>. I, on the other hand, wanted to have my task data stored as plaintext files on disk.</p>
+
+<p>I liked the simplicity of Nullboard's user interface, though, so I didn't immediately write it off and start looking for an alternative. Plus, I'd never heard of the localStorage web API before. My curiosity piqued and I decided to investigate.</p>
+
+<h2>The localStorage Rabbit Hole</h2>
+
+<p>Imagine you are developing Gmail. You have a server which hosts a user's mailbox data. This blob of data is potentially very large and, thus, slow to transmit over a network. To get around this problem, you decide to cache the mailbox data client side and have it persist across sessions. This way, when a user navigates to Gmail and opens their inbox, the server only has to transmit data about any new or updated messages instead of sending the entire inbox, most of which has not changed since the last login.</p>
+
+<p>So, how exactly do we persist data in a browser across sessions? Well, the HTTP protocol already has this thing called a cookie which allows a server to store data client side. Great! We'll just have the email server set a cookie in the browser with the blob of e-mail data we want to cache. No point in re-inventing the wheel, right?</p>
+
+<p>Oh, what's that? HTTP is stateless? Which means cookies must be sent with every single HTTP request? So, the browser and server are going to constantly send that e-mail blob back and forth over the network? Uh oh.</p>
+
+<p>According to the <a href="https://html.spec.whatwg.org/multipage/webstorage.html#dom-localstorage-dev">HTML standard</a>, one of the motivating factors for defining the localStorage API was that cookies were an inadequate solution for implementing persistent client side data storage. (For those that are interested, prior to the localStorage API, Google attempted to solve the persistent storage problem with <a href="https://en.wikipedia.org/wiki/Gears_(software)">Gears</a>, a plug-in which embedded a SQLite database in the browser. Cool!)</p>
+
+<p>How is localStorage implemented under the hood? At first glance, we might think it is just a giant hash map. After all, it has essentially the same API of getters and setters working with key-value pairs.</p>
+
+<p>Turns out things are slightly more complicated, mainly because localStorage must support use by multiple origins and we don't want to allow evil.com to have access to myBank.com's data. The <a href="https://storage.spec.whatwg.org/#storage-shelf">Storage Standard</a> defines the infrastructure which isolates browser storage data and it follows one of the weirdest naming conventions I've ever seen.</p>
+
+<h2>99 Storage Bottles In A Storage Bucket On a Storage Shelf In My Storage Shed</h2>
+
+<p>When accessing localStorage the browser invokes something called the "local storage bottle map" algorithm. This algorithm returns a "storage proxy map" object which is segmented into the following hierarchy:</p> 
+
+<ol>
+    <li>Storage Shed</li>
+    <li>Storage Shelves</li>
+    <li>Storage Buckets</li>
+    <li>Storage Bottles</li>
+</ol>
+
+<img alt="Storage model diagram (described in the next paragraph)" src="https://storage.spec.whatwg.org/assets/model-diagram.svg" height="815" width="434">
+
+<p>The storage shed owns multiple storage shelves each keyed by an origin.</p>
+
+<p>Each shelf, in turn, owns a "storage bucket". At the time of writing, this bucket level is actually redundant and is only defined by the standard in anticipation of having to support a future feature that allows for different storage policies. Currently, each storage shelf only owns one bucket, conveniently named "default".</p>
+
+<p>Finally, the storage bucket owns multiple storage bottles which each correspond to an endpoint. localStorage is one such endpoint, <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage">sessionStorage</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API">indexedDb </a>being examples of two others.</p>
+
+<p>Brief aside: one day I would love to meet the person that came up with this scheme. I see how they went from shed to shelf. But then bucket? And bottle? Why?! It demands an explanation.</p>
+
+<p>Anyways, conceptually, we can see that accessing localStorage isn't a simple hash table lookup but, instead, a traversal down a whole chain of carefully partitioned hash tables. In particular, it is the storage shelf level, keyed by origin, which keeps evil.com isolated from myBank.com's storage endpoints.</p>
+
+<p>This is all well and good, save for a "small" technicality. Those of you who have been following along in the Storage Standard might have noticed something weird at the top of section 4.2 "Storage keys". Here resides a link to <a href="https://privacycg.github.io/storage-partitioning/">an article by the W3C Privacy Control Group</a> surrounded by a scary red box. What does that other page say? "User agent state that is keyed by a single origin or site is an acknowledged privacy and security bug"? So the security model we just spent all this time learning about is...broken? Uh oh.</p>
+
+<h2>Cross-Site Leaks (XS-Leaks) Vulnerability</h2>
+
+<p>It turns out that user agent state keyed by a single origin is present in more than just the localStorage API. A lot more. Some highlights listed by the Privacy Control Group include concepts as wide-ranging as, the HTTP cache, the HTML defined Window.name property, and WebGL's cache of compiled shaders.</p>
+
+<p>That pesky single origin key exposes all of these things to something called a <a href="https://xsleaks.dev/">cross-site leak (XS-Leak)</a>. These are "a class of vulnerabilities derived from side-channels built into the web platform".</p>
+
+<p>A <a href="https://web.archive.org/web/20200924124054/https://owasp.org/www-pdf-archive/Side_Channel_Vulnerabilities.pdf">side channel</a> is a way for an attacker "to infer potentially sensitive information about an application just by observing normal behavior of a software system." It is the equivalent of deducing whether someone is home based on whether their car is in the driveway. You can't see inside their home but a publicly available observation leaks information about their state.</p>
+
+<p>The piece of information used for an XS-Leak is called an "oracle". We can illustrate the construction of an oracle based on localStorage behavior with the following (contrived & simplified) example.</p>
+
+<p>Suppose a user simultaneously opens evil.com and myBank.com in their browser. evil.com wants to know if the user is currently logged in to myBank.com. evil.com suspects that myBank.com's welcome page behaves differently based on whether a user is logged in. Lets say it does; when a user visits myBank.com, the welcome page reads localStorage.getItem('loggedIn') and conditionally redirects to /dashboard or /login based on the value.</p> 
+
+<p>evil.com decides to exploit this by embedding an iframe pointing to myBank.com (an iframe simply allows one web page to embed the contents of another web page). Note that evil.com cannot read the contents of the iframe. All it can do is embed myBank.com as a sort of black box.</p> 
+    
+<p>evil.com then times how long it takes the iframe to load. We might reasonably assume that loading the /dashboard page would take longer than loading the /login page since there is more data that needs to be fetched for the dashboard. The oracle then becomes "if the time it takes the iframe to load is above some threshold T, infer that the user is currently logged in". Suddenly, evil.com has inferred data about myBank.com through a browser API.</p>
+
+<p>The fact that the myBank.com iframe changes its welcome page behavior based on localStorage data set by the actual myBank.com website is what allows the XS-Leak. Since we are keying by single origin, the myBank.com iframe embedded by evil.com is assigned the same storage shelf key as the actual myBank.com website. Thus, the iframe shares the same localStorage endpoint as the actual website which makes the timing attack possible.</p>
+
+<p>The fix, then, would be to key storage shelves by both the origin and the top-level site. Then, the key of the iframe would become (myBank.com, evil.com) and the key of the actual website would be (myBank.com, myBank.com) resulting in the iframe getting served a different storage bottle than the actual site. Now, the loading time of the iframe's welcome page is no longer correlated to the state of myBank.com.</p>
+
+<p>This fix is exactly what the Privacy Control Group has proposed except on a larger scale; keying must be refactored for not only localStorage, but all user state objects that currently use single origin keys.</p>
+
+<h2>localStorage Concurrency Issues</h2>
+
+<p>My head is starting to hurt. And we haven't gotten any closer to dragging pixelated boxes across the screen and getting some of that sweet sweet productivity. Do we really have to worry about all these localStorage security issues?</p>
+
+<p>The short answer is probably not. Since Nullboard is meant to be used as a locally hosted program we can side-step a lot of these attacks which necessitate malicious sites having an internet connection to our app. However, there is a different localStorage issue that we do still have to consider, even with a locally hosted program.</p>
+
+<p>If you followed the link to the HTML standard above you might have noticed another big scary box of red text labeled "Warning!". This time, it is in the "Introduction" section and reads: "The localStorage getter provides access to shared state. This specification does not define the interaction with other agent clusters in a multiprocess user agent and authors are encouraged to assume that there is no locking mechanism."</p>
+
+<p>Interesting! Because localStorage provides no locking mechanism, there is a risk that if I have Nullboard open in two browser tabs, and make edits to the same item at the same time, one tab's changes might overwrite the other's, resulting in the loss of data. Does Nullboard deal with concurrent writes to localStorage in a graceful manner?</p>
+
+<p>Diving into the source code, the answer to our question is...most likely no. Looking for references to "localStorage" in the giant HTML file we come across the following class.</p>
+
+<pre>
+class Storage_Local extends Storage
+{
+    constructor()
+    {
+        super();
+        this.type = 'LocalStorage';
+    }
+
+    getItem(name)
+    {
+        return localStorage.getItem('nullboard.' + name);
+    }
+
+    setItem(name, val)
+    {
+        localStorage.setItem('nullboard.' + name, val);
+        return true;
+    }
+
+    delItem(name)
+    {
+        localStorage.removeItem('nullboard.' + name);
+        return true;
+    }
+    ...
+}
+</pre>
+
+<p>We see that Nullboard simply wraps calls to the localStorage API in its Storage_Local class with no extra consideration of concurrent writes. It's entirely possible that I am missing some clever trick elsewhere in the code but, for now, I'll just plan on using one active instance of Nullboard at a time.</p>
+
+<h2>localStorage Is Not A Reliable Way Of Storing Data Long Term</h2>
+
+<p>Ok, so we found a couple of issues with localStorage but nothing so major that it threatens the planned Nullboard use case. So we're good, right? Unfortunately, no. We still have one more issue to address: data saved in localStorage is owned by the browser and, therefore, pretty easy to accidentally delete.</p>
+
+<p>Some browsers will lump localStorage in with cookies, so that when you invoke a "Clear cookies" action, you are also unknowingly saying bye-bye to your localStorage.</p>
+
+<p>Even if you are careful about managing when/how you clear browser data, you could run into a situation where you must delete and re-install your browser. What then? localStorage just got nuked.</p>
+
+<h2>Using nbagent for Automated Back Up to Disk</h2>
+
+<p>What we would really like, with all this localStorage nonsense, is to back up our task data to disk. And the Nullboard devs, anticipating this need, created <a href="https://github.com/luismedel/nbagent">nbagent</a>, a companion app for Unix systems which serves exactly that purpose. Keeping in line with the Nullboard ethos, nbagent is just a single python file.</p>
+
+<p>So, I've kept you hostage for long enough. Here are the steps to install nbagent onto WSL and configure it to automatically start on login through Windows Task Scheduler:</p>
+
+<ol>
+    <li>Git clone the nbagent project.
+        <pre>~$ git clone https://github.com/luismedel/nbagent.git</pre>
+    </li>
+    <li>Create a Python virtual environment.
+        <pre>~/nbagent$ python3 -m venv env</pre>
+    </li>
+    <li>Activate the virtual environment and install the nbagent package.
+        <pre>~/nbagent$ source env/bin/activate</pre>
+        <pre>(env) ~/nbagent$ pip install -e .</pre>
+    </li>
+    <li>Test that the installation works. Take note of the token generated by the agent. You will need to paste this into the Nullboard application as per the <a href="https://nullboard.io/backups">instructions</a>. Then deactivate the virtual environment.
+        <pre>(env) ~/nbagent$ nbagent</pre>
+        <pre>* [!] Nullboard token: d6606ecaaae54612906cc56a75583b61</pre>
+        <pre>(env) ~/nbagent$ deactivate</pre>
+    </li>
+    <li>In Windows open the Task Scheduler application. Right click on the "Task Scheduler Library" in the left pane and choose the "Create Basic Task". In the task wizard choose "When I log on" at the "Trigger" tab and "Start a program" in the "Action" tab.</li>
+    <li>In the "Program/Script" field enter:
+        <pre>wsl</pre>
+        In the "Add arguments" field enter:
+        <pre>-d [Distribution Name] -u [Username] -- [Full Path of Home Directory]/nbagent/env/bin/nbagent</pre>
+        (We must use the full path to the nbagent installation in Task Scheduler since it does not load an interactive WSL shell and, therefore, doesn't load the .bashrc file.)
+    </li>
+</ol>
+
+<p>By default, nbagent writes to $XDG_DATA_HOME/nbagent. The $XDG_DATA_HOME variable is defined as part of the <a href="https://specifications.freedesktop.org/basedir/latest/">XDG Base Directory Specification</a> which defines where user-specific files should be organized on a UNIX-like system. $XDG_DATA_HOME is the standard directory for all user-specific data files and resolves to ~/.local/share by default.</p>
+
+<p>Now clone the Nullboard repo and open the nullboard.html file in your favorite browser. Everything should be good to go!</p>
+
+<h2>Whew! That was a lot!</h2>
+
+<p>Yes, we are finally done, having somehow installed a productivity app in the most unproductive way possible. Our end-result is a locally hosted, minimalistic kanban board, paired with a Windows task to automatically back-up localStorage data to disk.</p>
+
+<p>Along the way we learned about the internal workings and historical context of the localStorage browser API, got an overview of XS-Leak attacks made possible by keying user data with a single origin, and dived into the Nullboard codebase to get a first hand look at how it (didn't) handle localStorage concurrency issues.</p>
+
+<p>We also (briefly) saw how to call a wsl program in Windows Task Scheduler and learned about the existence of the XDG Base Directory Specification.</p>
+
+<p>Would it be easier to just use Trello? Probably. But where's the fun in that?</p>
+
+    
+</article>
+
+    <footer class="banner">
+      <nav class="banner-nav">
+        <li>
+          <a href="https://github.com/avpai-dinosaur">Github</a>
+        </li>
+        <li>
+          <a href="https://linkedin.com/in/ashvin-pai-188b7225b">LinkedIn</a>
+        </li>
+      </nav>
+    </footer>
+  </body>
+</html>
